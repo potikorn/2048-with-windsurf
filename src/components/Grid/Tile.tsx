@@ -6,8 +6,8 @@ import { type Tile as TileType } from '../../store/gameStore';
 interface TileProps {
   tile: TileType;
   gridSize: number;
-  spacing: number;
-  size: number;
+  spacing: string | number;
+  size: string;
 }
 
 const tileColors: Record<number, { background: string; text: string }> = {
@@ -24,14 +24,20 @@ const tileColors: Record<number, { background: string; text: string }> = {
   2048: { background: '#edc22e', text: '#f9f6f2' }
 };
 
-const StyledTile = styled(motion.div)<{ $value: number; $size: number }>`
+const StyledTile = styled(motion.div)<{ $value: number; $size: string }>`
   position: absolute;
-  width: ${props => props.$size}px;
-  height: ${props => props.$size}px;
+  width: ${props => props.$size};
+  height: ${props => props.$size};
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: ${({ $value }) => ($value < 100 ? '55px' : $value < 1000 ? '45px' : '35px')};
+  font-size: ${({ $value }) => 
+    $value < 100 
+      ? 'min(11vmin, 55px)' 
+      : $value < 1000 
+        ? 'min(9vmin, 45px)' 
+        : 'min(7vmin, 35px)'
+  };
   font-weight: bold;
   border-radius: 3px;
   background-color: ${({ $value }) => tileColors[$value]?.background || '#3c3a32'};
@@ -41,8 +47,8 @@ const StyledTile = styled(motion.div)<{ $value: number; $size: number }>`
 `;
 
 const Tile: React.FC<TileProps> = ({ tile, spacing, size }) => {
-  const x = tile.position.col * (size + spacing) + spacing;
-  const y = tile.position.row * (size + spacing) + spacing;
+  const x = `calc(${tile.position.col} * (${size} + ${spacing}) + ${spacing})`;
+  const y = `calc(${tile.position.row} * (${size} + ${spacing}) + ${spacing})`;
 
   return (
     <StyledTile

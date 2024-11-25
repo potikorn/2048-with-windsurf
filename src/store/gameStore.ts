@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 
-type Position = {
+export type Position = {
   row: number;
   col: number;
 };
 
-type Tile = {
+export type Tile = {
   id: number;
   value: number;
   position: Position;
@@ -13,7 +13,7 @@ type Tile = {
   isNew?: boolean;
 };
 
-interface GameState {
+export interface GameState {
   grid: number[][];
   score: number;
   highScore: number;
@@ -150,6 +150,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     const newTiles: Tile[] = [];
     const vector = getVector(direction);
     const traversals = buildTraversals(direction);
+    const mergedPositions = new Set<string>();  // Track merged positions
 
     const cellContent: { [key: string]: number } = {};
     for (let row = 0; row < GRID_SIZE; row++) {
@@ -174,10 +175,14 @@ export const useGameStore = create<GameState>((set, get) => ({
             moved = true;
           }
 
-          if (next && newGrid[next.row][next.col] === value) {
+          const nextPosKey = next ? `${next.row},${next.col}` : '';
+          if (next && 
+              newGrid[next.row][next.col] === value && 
+              !mergedPositions.has(nextPosKey)) {
             const mergedValue = value * 2;
             newGrid[next.row][next.col] = mergedValue;
             newScore += mergedValue;
+            mergedPositions.add(nextPosKey);  // Mark this position as merged
             
             newTiles.push({
               id: tileIdCounter++,
