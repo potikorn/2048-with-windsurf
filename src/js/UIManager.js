@@ -1,6 +1,13 @@
 // Handles all UI-related operations
 class UIManager {
   constructor() {
+    // Touch sensitivity configuration
+    this.touchConfig = {
+      minSwipeDistance: 30,      // Minimum distance (in pixels) to trigger a swipe
+      maxSwipeTime: 1000,        // Maximum time (in ms) for a swipe to be valid
+      directionThreshold: 0.5    // Ratio threshold to determine swipe direction (0-1)
+    };
+    
     this.initializeElements();
     this.previousTilePositions = new Map();
     this.validateLayout();
@@ -258,29 +265,51 @@ class UIManager {
       // Touch controls
       let touchStartX = 0;
       let touchStartY = 0;
-      const minSwipeDistance = 50;
+      let touchStartTime = 0;
 
       document.addEventListener('touchstart', e => {
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
+        touchStartTime = Date.now();
       });
 
       document.addEventListener('touchend', e => {
         const touchEndX = e.changedTouches[0].clientX;
         const touchEndY = e.changedTouches[0].clientY;
+        const touchEndTime = Date.now();
 
         const diffX = touchEndX - touchStartX;
         const diffY = touchEndY - touchStartY;
+        const elapsedTime = touchEndTime - touchStartTime;
+
+        // Check if swipe was too slow
+        if (elapsedTime > this.touchConfig.maxSwipeTime) {
+          return;
+        }
+
+        // Calculate absolute distances
+        const absX = Math.abs(diffX);
+        const absY = Math.abs(diffY);
 
         // Only trigger move if swipe distance is significant
-        if (Math.abs(diffX) > minSwipeDistance || Math.abs(diffY) > minSwipeDistance) {
-          if (Math.abs(diffX) > Math.abs(diffY)) {
+        if (absX > this.touchConfig.minSwipeDistance || absY > this.touchConfig.minSwipeDistance) {
+          // Determine if the swipe is more horizontal or vertical
+          const ratio = absX / (absX + absY);
+          
+          if (ratio > this.touchConfig.directionThreshold) {
+            // Horizontal swipe
             onMove(diffX > 0 ? 'ArrowRight' : 'ArrowLeft');
-          } else {
+          } else if (ratio < (1 - this.touchConfig.directionThreshold)) {
+            // Vertical swipe
             onMove(diffY > 0 ? 'ArrowDown' : 'ArrowUp');
           }
         }
       });
+
+      // Prevent scrolling when touching the game area
+      this.gridElement.addEventListener('touchmove', e => {
+        e.preventDefault();
+      }, { passive: false });
 
       // Button controls
       this.restartButton.addEventListener('click', onRestart);
