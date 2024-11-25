@@ -1,0 +1,56 @@
+{
+  "name": "2048-game",
+  "version": "1.0.0",
+  "description": "A 2048 game implementation with tests",
+  "main": "src/js/Game.js",
+  "type": "module",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "clean": "rm -rf dist/*",
+    "copy-assets": "mkdir -p dist/css dist/js && cp src/index.html dist/ && cp src/css/styles.css dist/css/",
+    "build:js": "rollup -c",
+    "build": "npm run clean && npm run copy-assets && npm run build:js",
+    "minify": "terser dist/js/bundle.js -o dist/js/bundle.js --compress --mangle && cleancss -o dist/css/styles.css src/css/styles.css",
+    "build:prod": "npm run build && npm run minify",
+    "kill-server": "kill-port 3000 8000",
+    "start": "npm run kill-server && http-server src -p 3000",
+    "start:prod": "npm run kill-server && http-server dist -p 8000",
+    "lint": "eslint 'src/**/*.js'",
+    "lint:fix": "eslint 'src/**/*.js' --fix",
+    "format": "prettier --write 'src/**/*.{js,css,html}'",
+    "format:check": "prettier --check 'src/**/*.{js,css,html}'"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.22.10",
+    "@eslint/js": "^8.55.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "babel-jest": "^29.7.0",
+    "clean-css-cli": "^5.6.2",
+    "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "http-server": "^14.1.1",
+    "jest": "^29.6.3",
+    "jest-environment-jsdom": "^29.6.3",
+    "kill-port": "^2.0.1",
+    "prettier": "^3.1.0",
+    "rollup": "^4.6.1",
+    "terser": "^5.24.0"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "moduleFileExtensions": ["js", "json"],
+    "testMatch": ["<rootDir>/src/__tests__/**/*.test.js"],
+    "collectCoverageFrom": [
+      "src/js/**/*.js",
+      "!src/js/**/*.test.js"
+    ],
+    "coverageDirectory": "coverage",
+    "transform": {
+      "^.+\\.js$": "babel-jest"
+    }
+  }
+}
