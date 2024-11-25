@@ -33,10 +33,10 @@ const StyledTile = styled(motion.div)<{ $value: number; $size: string }>`
   align-items: center;
   font-size: ${({ $value }) => 
     $value < 100 
-      ? 'min(11vmin, 55px)' 
+      ? 'min(10vmin, 50px)' 
       : $value < 1000 
-        ? 'min(9vmin, 45px)' 
-        : 'min(7vmin, 35px)'
+        ? 'min(8vmin, 40px)' 
+        : 'min(6vmin, 30px)'
   };
   font-weight: bold;
   border-radius: 3px;
@@ -44,6 +44,7 @@ const StyledTile = styled(motion.div)<{ $value: number; $size: string }>`
   color: ${({ $value }) => tileColors[$value]?.text || '#f9f6f2'};
   user-select: none;
   transform-origin: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
 const Tile: React.FC<TileProps> = ({ tile, spacing, size }) => {

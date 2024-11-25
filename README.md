@@ -1,63 +1,87 @@
 # 2048 Game
 
-A modern implementation of the classic 2048 game using vanilla JavaScript with a focus on clean code and maintainability.
+A modern implementation of the classic 2048 game built with React, TypeScript, and Framer Motion. This version features a responsive design that adapts beautifully to any screen size.
+
+## Live Demo
+
+[Play the game here](https://potikorn.github.io/2048-with-windsurf/) 
 
 ## Features
 
-- Responsive design that works on both desktop and mobile
-- Smooth animations and transitions
-- Touch and keyboard controls
-- Score tracking
-- Game state management
+- 🎮 Smooth animations powered by Framer Motion
+- 📱 Fully responsive design that works on all devices
+- ⌨️ Keyboard and touch controls
+- 🏆 Score tracking with best score persistence
+- 🎨 Modern UI with clean aesthetics
+- 🔄 "New Game" functionality
+- 🚫 No scrolling issues during gameplay
+
+## Tech Stack
+
+- React 18
+- TypeScript
+- Emotion (Styled Components)
+- Framer Motion
+- Vite
+- GitHub Pages
 
 ## Project Structure
 
 ```
 2048/
-├── src/                    # Source files
-│   ├── css/               # Stylesheets
-│   ├── js/                # JavaScript modules
-│   │   ├── Game.js        # Main game coordinator
-│   │   ├── GameState.js   # Game logic
-│   │   └── UIManager.js   # UI management
-│   └── __tests__/         # Test files
-├── dist/                   # Production build
-└── package.json           # Project configuration
+├── src/
+│   ├── components/        # React components
+│   │   ├── Grid/         # Game grid components
+│   │   ├── Score/        # Score components
+│   │   └── GameOver/     # Game over overlay
+│   ├── store/            # Game state management
+│   ├── utils/            # Helper functions
+│   └── App.tsx           # Root component
+├── scripts/              # Deployment scripts
+└── package.json          # Project configuration
 ```
 
 ## Getting Started
 
-1. Install dependencies:
+1. Clone the repository:
+```bash
+git clone https://github.com/your-username/2048.git
+cd 2048
+```
+
+2. Install dependencies:
 ```bash
 npm install
 ```
 
-2. Start development server:
+3. Start development server:
 ```bash
-npm start
+npm run dev
 ```
 
-3. Build for production:
+4. Build for production:
 ```bash
-npm run build:prod
+npm run build
 ```
 
-## Development
+## Development Commands
 
-- `npm start` - Start development server
-- `npm test` - Run tests
-- `npm run lint` - Check code style
-- `npm run format` - Format code
-- `npm run build` - Build for development
-- `npm run build:prod` - Build for production
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run deploy` - Deploy to GitHub Pages
 
-## Code Style
+## Recent Updates
 
-This project uses ESLint and Prettier to maintain code quality and consistent style. Run `npm run lint` to check your code and `npm run format` to automatically format it.
+- Added responsive design that maintains perfect alignment between score board and game grid
+- Fixed scrolling issues when using arrow keys
+- Improved touch controls and keyboard handling
+- Enhanced visual feedback and animations
+- Optimized layout for various screen sizes
 
-## Testing
+## Contributing
 
-Tests are written using Jest and can be found in the `src/__tests__` directory. Run `npm test` to execute the test suite.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 

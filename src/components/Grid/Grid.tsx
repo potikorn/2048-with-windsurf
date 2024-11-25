@@ -5,8 +5,8 @@ import { useGameStore } from '../../store/gameStore';
 import Tile from './Tile';
 
 const GRID_SIZE = 4;
-const GRID_SPACING = '3vmin';
-const CELL_SIZE = '20vmin';
+const GRID_SPACING = 'min(1.5vmin, 8px)';
+const CELL_SIZE = 'min(18vmin, 90px)';
 
 const GridContainer = styled.div`
   position: relative;
@@ -18,8 +18,7 @@ const GridContainer = styled.div`
   touch-action: none;
   user-select: none;
   margin: auto;
-  max-width: 500px;
-  max-height: 500px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
 const GridBackground = styled.div`
