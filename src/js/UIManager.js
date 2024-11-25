@@ -4,6 +4,7 @@ class UIManager {
     this.initializeElements();
     this.previousTilePositions = new Map();
     this.validateLayout();
+    this.loadHighScore();
   }
 
   validateLayout() {
@@ -11,6 +12,7 @@ class UIManager {
     const requiredElements = {
       grid: this.gridElement,
       score: this.scoreElement,
+      highScore: this.highScoreElement,
       gameOver: this.gameOverElement,
       finalScore: this.finalScoreElement,
       menuButton: this.menuButton,
@@ -46,6 +48,7 @@ class UIManager {
       // Cache DOM elements
       this.gridElement = document.getElementById('grid');
       this.scoreElement = document.getElementById('score');
+      this.highScoreElement = document.getElementById('high-score');
       this.gameOverElement = document.getElementById('game-over');
       this.finalScoreElement = document.getElementById('final-score');
       this.menuButton = document.getElementById('menu-button');
@@ -56,6 +59,34 @@ class UIManager {
     } catch (error) {
       console.error('Failed to initialize UI elements:', error);
       throw error;
+    }
+  }
+
+  loadHighScore() {
+    try {
+      const highScore = localStorage.getItem('highScore') || 0;
+      this.highScoreElement.textContent = parseInt(highScore);
+    } catch (error) {
+      console.warn('Failed to load high score:', error);
+      // Fallback to 0 if localStorage fails
+      this.highScoreElement.textContent = 0;
+    }
+  }
+
+  updateHighScore(score) {
+    try {
+      const storedHighScore = parseInt(localStorage.getItem('highScore')) || 0;
+      if (score > storedHighScore) {
+        this.highScoreElement.textContent = score;
+        this.highScoreElement.classList.add('updated');
+        localStorage.setItem('highScore', score.toString());
+        
+        setTimeout(() => {
+          this.highScoreElement.classList.remove('updated');
+        }, 300);
+      }
+    } catch (error) {
+      console.error('Failed to update high score:', error);
     }
   }
 
@@ -93,6 +124,13 @@ class UIManager {
 
     try {
       this.scoreElement.textContent = score;
+      this.scoreElement.classList.add('updated');
+      setTimeout(() => {
+        this.scoreElement.classList.remove('updated');
+      }, 300);
+      
+      // Check for new high score
+      this.updateHighScore(score);
     } catch (error) {
       console.error('Failed to update score:', error);
       throw error;

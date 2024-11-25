@@ -162,7 +162,6 @@ describe('UI Layout Tests', () => {
   let gridElement;
 
   beforeEach(() => {
-    // Set up complete DOM structure
     document.body.innerHTML = `
       <div class="container">
         <div class="header">
@@ -170,9 +169,15 @@ describe('UI Layout Tests', () => {
             <h1>2048</h1>
             <button id="menu-button" class="menu-button">New Game</button>
           </div>
-          <div class="score-container">
-            <div class="score-label">Score</div>
-            <div id="score">0</div>
+          <div class="scores-section">
+            <div class="score-container">
+              <div class="score-label">Score</div>
+              <div id="score">0</div>
+            </div>
+            <div class="score-container">
+              <div class="score-label">Best</div>
+              <div id="high-score">0</div>
+            </div>
           </div>
         </div>
         <div class="game-container">
@@ -250,5 +255,97 @@ describe('UI Layout Tests', () => {
     expect(() => {
       uiManager.createTileElement(-1, 0, 0);
     }).toThrow('Invalid tile parameters');
+  });
+});
+
+describe('High Score Tests', () => {
+  let uiManager;
+  
+  beforeEach(() => {
+    // Clear localStorage before each test
+    localStorage.clear();
+    
+    // Set up DOM
+    document.body.innerHTML = `
+      <div class="container">
+        <div class="header">
+          <div class="title-section">
+            <h1>2048</h1>
+            <button id="menu-button" class="menu-button">New Game</button>
+          </div>
+          <div class="scores-section">
+            <div class="score-container">
+              <div class="score-label">Score</div>
+              <div id="score">0</div>
+            </div>
+            <div class="score-container">
+              <div class="score-label">Best</div>
+              <div id="high-score">0</div>
+            </div>
+          </div>
+        </div>
+        <div class="game-container">
+          <div id="grid"></div>
+          <div id="game-over" class="game-over hidden">
+            <div class="game-over-content">
+              <h2>Game Over!</h2>
+              <p>Final Score: <span id="final-score">0</span></p>
+              <button id="restart-button">Play Again</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    // Mock window.getComputedStyle
+    window.getComputedStyle = jest.fn().mockImplementation((element) => ({
+      position: 'relative',
+      display: 'grid',
+      aspectRatio: '1',
+      width: '500px'
+    }));
+    
+    uiManager = new UIManager();
+  });
+
+  afterEach(() => {
+    localStorage.clear();
+    document.body.innerHTML = '';
+    jest.restoreAllMocks();
+  });
+
+  test('should initialize with zero high score when no previous score exists', () => {
+    expect(document.getElementById('high-score').textContent).toBe('0');
+  });
+
+  test('should load existing high score from localStorage', () => {
+    localStorage.setItem('highScore', '1000');
+    uiManager = new UIManager();
+    expect(document.getElementById('high-score').textContent).toBe('1000');
+  });
+
+  test('should update high score when current score is higher', () => {
+    uiManager.updateScore(2048);
+    expect(document.getElementById('high-score').textContent).toBe('2048');
+    expect(localStorage.getItem('highScore')).toBe('2048');
+  });
+
+  test('should not update high score when current score is lower', () => {
+    localStorage.setItem('highScore', '4096');
+    uiManager = new UIManager();
+    uiManager.updateScore(2048);
+    expect(document.getElementById('high-score').textContent).toBe('4096');
+  });
+
+  test('should handle localStorage errors gracefully', () => {
+    // Mock localStorage.getItem to throw an error
+    const mockError = new Error('Storage access denied');
+    jest.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw mockError;
+    });
+    
+    // Should not throw error and default to 0
+    uiManager = new UIManager();
+    expect(document.getElementById('high-score').textContent).toBe('0');
   });
 });
