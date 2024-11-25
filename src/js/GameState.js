@@ -135,21 +135,24 @@ class GameState {
     // Check for empty cells
     for (let r = 0; r < this.size; r++) {
       for (let c = 0; c < this.size; c++) {
-        if (this.grid[r][c] === 0) return true;
+        if (this.grid[r][c] === 0) {
+          return true;
+        }
       }
     }
 
-    // Check for possible merges horizontally
+    // Check for adjacent same numbers (horizontally and vertically)
     for (let r = 0; r < this.size; r++) {
-      for (let c = 0; c < this.size - 1; c++) {
-        if (this.grid[r][c] === this.grid[r][c + 1]) return true;
-      }
-    }
-
-    // Check for possible merges vertically
-    for (let r = 0; r < this.size - 1; r++) {
       for (let c = 0; c < this.size; c++) {
-        if (this.grid[r][c] === this.grid[r + 1][c]) return true;
+        const current = this.grid[r][c];
+        // Check right neighbor
+        if (c < this.size - 1 && current === this.grid[r][c + 1]) {
+          return true;
+        }
+        // Check bottom neighbor
+        if (r < this.size - 1 && current === this.grid[r + 1][c]) {
+          return true;
+        }
       }
     }
 
@@ -157,7 +160,9 @@ class GameState {
   }
 
   move(direction) {
-    if (this.isGameOver) {
+    // Check for game over first
+    if (!this.hasValidMoves()) {
+      this.isGameOver = true;
       return {
         moved: false,
         score: this.score,
@@ -243,11 +248,6 @@ class GameState {
     // Only add a new tile if the grid actually changed
     if (moved && JSON.stringify(this.grid) !== previousGrid) {
       this.addRandomTile(false);
-    }
-
-    // Check if game is over
-    if (!this.hasValidMoves()) {
-      this.isGameOver = true;
     }
 
     return {

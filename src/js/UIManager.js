@@ -138,7 +138,11 @@ class UIManager {
   }
 
   createTileElement(value, row, col) {
-    if (!Number.isInteger(value) || value <= 0 || !Number.isInteger(row) || !Number.isInteger(col)) {
+    if (!Number.isInteger(value) || value <= 0) {
+      throw new Error('Invalid tile parameters');
+    }
+
+    if (!Number.isInteger(row) || row < 0 || row >= 4 || !Number.isInteger(col) || col < 0 || col >= 4) {
       throw new Error('Invalid tile parameters');
     }
 
@@ -152,7 +156,7 @@ class UIManager {
       const targetCell = cells[row * 4 + col];
       
       if (!targetCell) {
-        throw new Error(`No grid cell found at position [${row}, ${col}]`);
+        throw new Error(`Internal error: Grid cell not found at [${row}, ${col}]`);
       }
       
       targetCell.appendChild(tile);

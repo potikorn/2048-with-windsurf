@@ -26,15 +26,13 @@ class Game {
   handleMove(direction) {
     const result = this.gameState.move(direction);
 
-    if (result.moved) {
-      // Update UI with merged tiles information
-      this.uiManager.updateGrid(this.gameState.grid, result.mergedTiles);
-      this.uiManager.updateScore(this.gameState.score);
+    // Update UI with merged tiles information
+    this.uiManager.updateGrid(this.gameState.grid, result.mergedTiles);
+    this.uiManager.updateScore(this.gameState.score);
 
-      // Check for game over
-      if (result.isGameOver) {
-        this.uiManager.showGameOver(this.gameState.score);
-      }
+    // Check for game over, even if move wasn't possible
+    if (this.gameState.isGameOver) {
+      this.uiManager.showGameOver(this.gameState.score);
     }
   }
 
