@@ -2,39 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>2048 Game</title>
-    <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
-    <div class="container">
-      <div class="header">
-        <div class="title-section">
-          <h1>2048</h1>
-          <button id="menu-button" class="menu-button">New Game</button>
-        </div>
-        <div class="scores-section">
-          <div class="score-container">
-            <div class="score-label">Score</div>
-            <div id="score">0</div>
-          </div>
-          <div class="score-container">
-            <div class="score-label">Best</div>
-            <div id="high-score">0</div>
-          </div>
-        </div>
-      </div>
-      <div class="game-container">
-        <div id="grid"></div>
-        <div id="game-over" class="game-over hidden">
-          <div class="game-over-content">
-            <h2>Game Over!</h2>
-            <p>Final Score: <span id="final-score">0</span></p>
-            <button id="restart-button">Play Again</button>
-          </div>
-        </div>
-      </div>
-      <div class="instructions">Use arrow keys or swipe to play. Combine tiles to reach 2048!</div>
-    </div>
-    <script type="module" src="js/Game.js"></script>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
   </body>
 </html>
